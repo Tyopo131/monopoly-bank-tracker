@@ -7,6 +7,44 @@ class InfType:
     def __str__(self):
         return "Infinity"
 inf = InfType() # SENTINEL used by the bank
+def resolveRepl(amountNeeded: int | None = None, autoCancel: bool = False) -> int: # Raise money to avoid bankruptcy
+    raised: int = 0
+    print(r"""(int): add raised money
+done: exit the resolver
+- <amount>: remove money""")
+    while (True):
+        neededStr = None
+        if amountNeeded is None:
+            neededStr = ""
+        else:
+            neededStr = f"/{amountNeeded}"
+        command = input(f"({raised}{neededStr}) Resolve> ")
+        command = shlex.split(command)
+        match command[0]:
+            case "done":
+                break
+            case "-":
+                if len(command) < 2:
+                    printf("- requires 1 argument")
+                    continue
+                if not command[1].isnumeric():
+                    print("amount must be an int")
+                    continue
+                toSubtract = int(command[1])
+                if (raised - toSubtract) < 0:
+                    raised = 0
+                    continue
+                raised -= toSubtract
+            case _:
+                if not command[0].isnumeric():
+                    print("input must be an int")
+                    continue
+                raised += int(command[0])
+                if amountNeeded is not None:
+                    if (autoCancel == True) and (raised >= amountNeeded):
+                        break
+    return raised
+
 class Account:
     def receive(self, amount: int):
         self._money += amount
@@ -17,6 +55,38 @@ class Account:
     def money(self) -> int:
         return self._money
     def transfer(self, other: Self, amount: int):
+        global phys
+        raised = 0
+        while self._money < amount:
+            result = input(f"""not enough money to complete transfer
+info: we have: {self._money}, required: {amount}, diff: {amount - self._money}
+    - enter (r)esolver
+    - (d)elete account
+    - import (p)hysical money
+    - (c)ancel the transaction
+choose an option: """)
+            match result:
+                case "d":
+                    print("not implemented")
+                    pass # TODO: implement delete functionality
+                case "c":
+                    self._money -= raised
+                    raise Cancel("Account did not have enough money and the user cancelled the transaction")
+                case "p":
+                    try:
+                        while True:
+                            result = input("amount: ")
+                            if not result.isnumeric():
+                                continue
+                            phys.transfer(self, int(result))
+                            raised += int(result)
+                            break
+                    except Cancel as e:
+                        print(f"physical transfer cancelled: {e}")
+                case "r":
+                    resolvedAmount = resolveRepl(amountNeeded=amount - self._money, autoCancel=False)
+                    self._money += resolvedAmount
+                    raised += resolvedAmount
         self._money -= amount
         other.receive(amount)
 class Bank(Account):
