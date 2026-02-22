@@ -8,30 +8,31 @@ class InfType:
         return "Infinity"
 inf = InfType() # SENTINEL used by the bank
 class Account:
+    def receive(self, amount: int):
+        self._money += amount
     def __init__(self):
+        self.recieve = self.receive # happens to the best of us
         self._money = 0
     @property
     def money(self) -> int:
         return self._money
     def transfer(self, other: Self, amount: int):
         self._money -= amount
-        other.recieve(amount)
-    def recieve(self, amount: int):
-        self._money += amount
+        other.receive(amount)
 class Bank(Account):
     def __init__(self):
         super().__init__()
     @property
-    def money(self) -> inf:
+    def money(self) -> InfType:
         return inf
-    def recieve(self, amount: int):
+    def receive(self, amount: int):
         pass
     def transfer(self, other: Self, amount: int):
-        other.recieve(amount)
+        other.receive(amount)
 class Phys(Bank):
     def __init__(self):
         super().__init__()
-    def transfer(self, other: Self, amount: int):
+    def prompt(self):
         while (True):
             result = input("has the physical transaction completed? (y/n): ")
             result = result.lower()
@@ -41,6 +42,10 @@ class Phys(Bank):
                 raise Cancel("User denied physical transaction")
             else:
                 continue
+    def receive(self, amount: int):
+        self.prompt()
+    def transfer(self, other: Self, amount: int):
+        self.prompt()
         super().transfer(other, amount)
 bank = Bank() # SENTINEL
 phys = Phys() # SENTINEL
