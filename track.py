@@ -57,18 +57,24 @@ class Account:
     def transfer(self, other: Self, amount: int):
         global phys
         raised = 0
-        while self._money < amount:
-            result = input(f"""not enough money to complete transfer
-info: we have: {self._money}, required: {amount}, diff: {amount - self._money}
-    - enter (r)esolver
-    - (d)elete account
-    - import (p)hysical money
-    - (c)ancel the transaction
-choose an option: """)
+        while True:
+            if self._money >= amount:
+                print("RESOLVED: enough money exists to complete the transfer")
+            else:
+                print("""not enough money to complete transfer""")
+            print(f"""info: we have: {self._money}, required: {amount}, diff: {amount - self._money}
+\t- enter (r)esolver
+\t- (i)gnore
+\t- import (p)hysical money
+\t- (c)ancel the transaction""")
+            if self.money >= amount:
+                print("\t- p(a)y the raised money and exit")
+            result = input("choose an option: ")
             match result.lower():
-                case "d":
-                    print("not implemented")
-                    pass # TODO: implement delete functionality
+                case "a":
+                    break
+                case "i":
+                    raise Cancel("ignored")
                 case "c":
                     self._money -= raised
                     raise Cancel("Account did not have enough money and the user cancelled the transaction")
