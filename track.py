@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import shlex
 from typing import Self
+
 class Cancel(Exception):
     pass
 class InfType:
