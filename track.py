@@ -65,7 +65,7 @@ info: we have: {self._money}, required: {amount}, diff: {amount - self._money}
     - import (p)hysical money
     - (c)ancel the transaction
 choose an option: """)
-            match result:
+            match result.lower():
                 case "d":
                     print("not implemented")
                     pass # TODO: implement delete functionality
