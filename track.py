@@ -46,20 +46,9 @@ done: exit the resolver
                     if (autoCancel == True) and (raised >= amountNeeded):
                         break
     return raised
-
-class Account:
-    def receive(self, amount: int):
-        self._money += amount
-    def __init__(self):
-        self.recieve = self.receive # happens to the best of us
-        self._money = 0
-    @property
-    def money(self) -> int:
-        return self._money
-    def transfer(self, other: Self, amount: int):
-        global phys
-        raised = 0
-        while True:
+def resolveInterface(self, amount: int):
+    raised = 0
+    while True:
             if self._money >= amount:
                 print("RESOLVED: enough money exists to complete the transfer")
             else:
@@ -74,7 +63,7 @@ class Account:
             result = input("choose an option: ")
             match result.lower():
                 case "a":
-                    break
+                    if self.money >= amount: break
                 case "i":
                     raise Cancel("ignored")
                 case "c":
@@ -95,6 +84,17 @@ class Account:
                     resolvedAmount = resolveRepl(amountNeeded=amount - self._money, autoCancel=False)
                     self._money += resolvedAmount
                     raised += resolvedAmount
+class Account:
+    def receive(self, amount: int):
+        self._money += amount
+    def __init__(self):
+        self.recieve = self.receive # happens to the best of us
+        self._money = 0
+    @property
+    def money(self) -> int:
+        return self._money
+    def transfer(self, other: Self, amount: int):
+        if self._money < amount: resolveInterface(self, amount)
         self._money -= amount
         other.receive(amount)
 class Bank(Account):
@@ -151,7 +151,7 @@ def save(filename: str):
                     specials[name] = "bank"
                 else:
                     accs[name] = value.money
-            combined = {
+            combined: dict[str, dict[str, str] | dict[str, int]] = {
                 "specials": specials,
                 "accounts": accs
             }
@@ -297,6 +297,9 @@ while running:
         print("EOF")
         running = False
         break
+    except ValueError as e:
+        print(f"failed: {e}")
+        continue
     if len(command) < 1: continue
     try: matchCommands(command)
     except Cancel as e:
