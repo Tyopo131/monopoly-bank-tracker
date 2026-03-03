@@ -23,6 +23,7 @@ done: exit the resolver
             neededStr = f"/{amountNeeded}"
         command = input(f"({raised}{neededStr}) Resolve> ")
         command = shlex.split(command)
+        if len(command) < 1: continue
         match command[0]:
             case "done":
                 break
