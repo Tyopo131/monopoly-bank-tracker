@@ -135,6 +135,20 @@ needsSave = False
 running: bool = True
 
 prompt: str = "--> "
+def delete(*args: str, skipConfirm: bool = False):
+    if not skipConfirm:
+        while (True):
+            print("Accounts to delete:", *args, "\nARE YOU SURE you want to delete these accounts? (y/n): ", end="")
+            confirmation = input()
+            match confirmation:
+                case "y": break
+                case "n": raise Cancel("User denied delete confirmation")
+                case _: continue
+    for acc in args:
+        if not accounts.get(acc):
+            print(f"warning: account {acc} does not exist")
+            continue
+        del accounts[acc]
 
 def save(filename: str):
     global currentFilename
@@ -231,7 +245,12 @@ def matchCommands(command: list[str]):
                 bank.transfer(account, int(amount))
             accounts[command[1]] = account
             needsSave = True
-            
+        case "delete":
+            if len(command) < 2:
+                print("usage: delete <names...>")
+                return
+            toDelete = command[1:]
+            delete(*toDelete, skipConfirm=False)
         case "getAccs":
             for accName, account in accounts.items():
                 print(accName + ": " + str(account.money))
