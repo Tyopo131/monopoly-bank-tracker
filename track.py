@@ -2,6 +2,7 @@
 import shlex
 from typing import Self
 import json
+import math
 
 class Cancel(Exception):
     pass
@@ -266,6 +267,37 @@ def matchCommands(command: list[str]):
                 return
             accounts[command[1]] = phys
             needsSave = True
+        case "mg" | "mpay":
+            if len(command) < 4:
+                print("usage: pay [acc1] [acc2] [amount]\n\t(e.g for 10% interest use specify '10' or '10%')")
+                return
+            acc1 = command[1]
+            acc2 = command[2]
+            amount = command[3]
+            interest: float = None
+            if len(command) >= 5:
+                if not command[4].isnumeric:
+                    print("interest must be an int (e.g for 10% interest use specify '10' or '10%')")
+                    return
+                interest = int(command[4]) / 100
+            else: interest = 0.1
+            if not amount.isnumeric():
+                print("amount must be an int")
+                return
+            if not accounts.get(acc1):
+                print(f"account {acc1} does not exist")
+                return
+            if not accounts.get(acc2):
+                print(f"account {acc2} does not exist")
+                return
+            amount = float(amount)
+            amount += float(amount) * interest
+            if not (amount % 1 == 0):
+                roundedAmount = math.ceil(amount)
+                print(f"warning: specified interest would result in a non-whole amount ({amount}), rounding up to {roundedAmount}")
+                amount = roundedAmount
+            transferAccount = accounts[acc1]
+            transferAccount.transfer(accounts[acc2], int(amount))
         case "pay" | "transfer":
             if len(command) < 4:
                 print("usage: pay [acc1] [acc2] [amount]")
