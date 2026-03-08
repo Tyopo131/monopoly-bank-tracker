@@ -12,7 +12,7 @@ class InfType:
 inf = InfType() # SENTINEL used by the bank
 def resolveRepl(amountNeeded: int | None = None, autoCancel: bool = False) -> int: # Raise money to avoid bankruptcy
     raised: int = 0
-    print(r"""(int): add raised money
+    print(r"""<int>: add raised money
 done: exit the resolver
 - <amount>: remove money""")
     while (True):
@@ -236,7 +236,7 @@ def matchCommands(command: list[str]):
     match command[0]:
         case "newAcc":
             if len(command) < 2:
-                print("usage: newAcc <name> [money]")
+                print("usage: newAcc <name> [<money>]")
                 return
             account = Account()
             if len(command) >= 3:
@@ -270,7 +270,7 @@ def matchCommands(command: list[str]):
             needsSave = True
         case "mg" | "mpay":
             if len(command) < 4:
-                print(f"usage: mg|mpay <acc1> <acc2> <amount> [interest]\n\t(e.g for 10% interest use specify '10' or '10%')")
+                print(f"usage: mg|mpay <acc1> <acc2> <amount> [<interest>]\n\t(e.g for 10% interest use specify '10' or '10%')")
                 return
             acc1 = command[1]
             acc2 = command[2]
@@ -323,7 +323,7 @@ def matchCommands(command: list[str]):
                 save(command[1])
             else:
                 if currentFilename is None:
-                    print("no current file and no filename specified, usage: save [filename]")
+                    print("no current file and no filename specified, usage: save [<filename>]")
                     return
                 save(currentFilename)
         case "load":
