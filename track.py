@@ -270,7 +270,7 @@ def matchCommands(command: list[str]):
             needsSave = True
         case "mg" | "mpay":
             if len(command) < 4:
-                print("usage: pay [acc1] [acc2] [amount]\n\t(e.g for 10% interest use specify '10' or '10%')")
+                print(f"usage: mg|mpay <acc1> <acc2> <amount> [interest]\n\t(e.g for 10% interest use specify '10' or '10%')")
                 return
             acc1 = command[1]
             acc2 = command[2]
