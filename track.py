@@ -194,6 +194,7 @@ def load(filename: str, wipe: bool=True, skipConfirm: bool=False):
             combined = json.load(f)
             if wipe:
                 accounts = {}
+                currentFilename = filename
             specials = combined["specials"]
             accs = combined["accounts"]
             for name, value in specials.items():
