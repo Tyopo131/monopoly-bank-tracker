@@ -264,7 +264,7 @@ def matchCommands(command: list[str]):
             needsSave = True
         case "phys":
             if len(command) < 2:
-                print("usage: phys [accName]")
+                print("usage: phys <accName>")
                 return
             accounts[command[1]] = phys
             needsSave = True
