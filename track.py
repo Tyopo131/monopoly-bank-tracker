@@ -258,7 +258,7 @@ def matchCommands(command: list[str]):
                 print(accName + ": " + str(account.money))
         case "bank":
             if len(command) < 2:
-                print("usage: bank [accName]")
+                print("usage: bank <accName>")
                 return
             accounts[command[1]] = bank
             needsSave = True
