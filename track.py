@@ -301,7 +301,7 @@ def matchCommands(command: list[str]):
             transferAccount.transfer(accounts[acc2], int(amount))
         case "pay" | "transfer":
             if len(command) < 4:
-                print("usage: pay [acc1] [acc2] [amount]")
+                print("usage: pay <acc1> <acc2> <amount>")
                 return
             acc1 = command[1]
             acc2 = command[2]
