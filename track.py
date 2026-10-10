@@ -340,6 +340,14 @@ def matchCommands(command: list[str]):
         case "exit":
             saveCheck()
             running = False
+        case "go":
+            if (len(command) < 2):
+                print("usage: go [account]")
+            acc = accounts.get(command[1])
+            if not acc:
+                print(f"account {acc} does not exist")
+                return
+            bank.transfer(acc, 200) # go money
         case _:
             print(f"command not found: '{command[0]}'")
 
